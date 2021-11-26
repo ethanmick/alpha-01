@@ -2,6 +2,7 @@ import { GameContext, GameState, ItemType, Seeds, useEngine } from 'game'
 import 'tailwindcss/tailwind.css'
 
 const initial: GameState = {
+  lastUpdate: new Date().getTime(),
   tick: 1000,
   money: 100,
   farm: {

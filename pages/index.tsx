@@ -25,9 +25,13 @@ const Tile = ({ tile, i, plant, harvest }: TileProps) => {
 
   if (tile.seed && tile.seed.time < tile.seed.growingTime) {
     return (
-      <div className="border rounded h-24 text-center">
-        <div>{tile.seed.name}</div>
-        <div>{Math.round((tile.seed.growingTime - tile.seed.time) / 1000)}</div>
+      <div className="border rounded h-24 flex items-center justify-center">
+        <div className="text-center">
+          <div className="font-bold text-green-200">{tile.seed.name}</div>
+          <div className="text-xs text-gray-100">
+            {Math.round((tile.seed.growingTime - tile.seed.time) / 1000)}
+          </div>
+        </div>
       </div>
     )
   }
@@ -37,14 +41,21 @@ const Tile = ({ tile, i, plant, harvest }: TileProps) => {
       className="border rounded h-24 flex justify-center items-center"
       onClick={() => harvest(i)}
     >
-      Harvest {tile.seed.name}
+      <div>
+        <div className="font-bold text-green-200">{tile.seed.name}</div>
+        <div>Harvest</div>
+      </div>
     </button>
   )
 }
 
 const Plots = () => {
-  const [seed, setSeed] = useState<string>('')
   const { state, update } = useGame()
+  const defaultSeed =
+    state.inventory.find(
+      (stack) => stack.item.type === ItemType.Seed && stack.count > 0
+    )?.item.name ?? ''
+  const [seed, setSeed] = useState<string>(defaultSeed)
 
   const plant = (i: number) => {
     update((state: GameState) => {
@@ -57,6 +68,14 @@ const Plots = () => {
       stack.count -= 1
       const foundSeed = Seeds.find(({ name }) => name === stack.item.name)
       state.farm.tiles[i].seed = { ...clone(foundSeed), time: 0 }
+
+      if (stack.count === 0) {
+        const newSeed =
+          state.inventory.find(
+            (stack) => stack.item.type === ItemType.Seed && stack.count > 0
+          )?.item.name ?? ''
+        setSeed(newSeed)
+      }
     })
   }
 
@@ -86,13 +105,13 @@ const Plots = () => {
   return (
     <>
       <select
-        className="border rounded m-2"
+        className="p-1 border rounded m-2"
         value={seed}
         onChange={(e) => {
           setSeed(e.target.value)
         }}
       >
-        <option value="">Select Seed</option>
+        <option value="">Choose seeds to plant</option>
         {state.inventory
           .filter(
             (stack) => stack.item.type === ItemType.Seed && stack.count > 0
