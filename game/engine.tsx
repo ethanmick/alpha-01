@@ -17,7 +17,14 @@ export const useEngine = (initial: GameState): EngineState => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setState((state) => clone(update(state, initial.tick)))
+      setState((state) => {
+        const now = new Date()
+        const elapsed = now.getTime() - state.lastUpdate
+        return {
+          ...clone(update(state, elapsed)),
+          lastUpdate: now.getTime()
+        }
+      })
     }, initial.tick)
 
     return () => clearInterval(interval)

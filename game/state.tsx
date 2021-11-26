@@ -39,6 +39,7 @@ export interface Farm {
 }
 
 export interface GameState {
+  lastUpdate: number
   tick: number
   money: number
   farm: Farm
