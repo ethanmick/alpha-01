@@ -1,11 +1,28 @@
+export enum ItemType {
+  Seed,
+  Plant
+}
+
 export interface Plant {
   name: string
   value: number
 }
 
+export interface Item {
+  name: string
+  type: ItemType
+  value?: number
+}
+
+export interface ItemStack {
+  item: Item
+  count: number
+}
+
 export interface Seed {
   name: string
   cost: number
+  value: number
   growingTime: number
 }
 
@@ -25,4 +42,5 @@ export interface GameState {
   tick: number
   money: number
   farm: Farm
+  inventory: ItemStack[]
 }

@@ -7,16 +7,12 @@ type UserAction = (s: GameState) => void
 
 export type UserUpdate = (fn: UserAction) => void
 
-export const GameContext = createContext<GameState>(null)
-export const useGame = () => useContext(GameContext)
-
-interface EngineState {
+export interface EngineState {
   state: GameState
   update: (fn: UserAction) => void
 }
 
-export const useEngine = (): EngineState => {
-  const initial = useGame()
+export const useEngine = (initial: GameState): EngineState => {
   const [state, setState] = useState<GameState>(initial)
 
   useEffect(() => {
@@ -38,3 +34,6 @@ export const useEngine = (): EngineState => {
     update: (fn: UserAction) => action(fn)
   }
 }
+
+export const GameContext = createContext<EngineState>(null)
+export const useGame = () => useContext(GameContext)
