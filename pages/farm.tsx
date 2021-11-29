@@ -1,4 +1,4 @@
-import { FarmTile, Header } from 'components'
+import { ActivityBar, FarmTile, Header } from 'components'
 import { useGame } from 'game'
 
 const Plots = () => {
@@ -29,6 +29,7 @@ export default function FarmPage() {
   return (
     <>
       <Header name="Farm" back="/" />
+      <ActivityBar />
       <Plots />
     </>
   )

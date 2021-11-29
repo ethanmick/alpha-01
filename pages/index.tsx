@@ -1,8 +1,11 @@
+import { ActivityBar } from 'components'
 import Link from 'next/link'
 
 export default function HomePage() {
   return (
     <div>
+      <ActivityBar />
+
       <Link href="/farm">
         <a className="block">Farm</a>
       </Link>
