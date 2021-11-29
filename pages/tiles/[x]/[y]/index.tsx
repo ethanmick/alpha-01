@@ -1,4 +1,4 @@
-import { Header } from 'components'
+import { ActivityBar, Header } from 'components'
 import {
   ActivityPlant,
   GameState,
@@ -107,11 +107,14 @@ const BasicDirt = ({ tile }: BasicDirtProps) => {
       <p className="text-center italic py-1 text-xs text-gray-500">
         {Descriptions[tile.type]}
       </p>
-      <p>Planted</p>
-      <ul>
+      <h2 className="text-xl px-2">Planted</h2>
+      <ul className="divide-y">
         {tile.plots.map((plot, i) => (
-          <li key={i}>
-            {plot.name} - {(plot as any).time || ''}
+          <li key={i} className="px-2 py-4 flex items-center">
+            <Image src="/wheat.png" priority width={24} height={24} />
+            <span className="ml-2">
+              {plot.name} {(plot as any).time || ''}
+            </span>
           </li>
         ))}
       </ul>
@@ -125,7 +128,14 @@ const BasicDirt = ({ tile }: BasicDirtProps) => {
           <button onClick={plant}>Plant</button>
         </>
       )}
-      {canHarvest && <button onClick={harvest}>Harvest</button>}
+      {canHarvest && (
+        <button
+          className="w-full p-4 text-center text-white font-bold bg-green-500"
+          onClick={harvest}
+        >
+          Harvest
+        </button>
+      )}
     </>
   )
 }
@@ -142,6 +152,7 @@ export default function TilePage() {
   return (
     <>
       <Header name="Farm" back="/farm" />
+      <ActivityBar />
       <BasicDirt tile={tile} />
     </>
   )

@@ -5,17 +5,20 @@ import { GameState } from './state'
 import { Tile } from './tile'
 
 export abstract class Activity {
+  public timeElapsed: number = 0
   constructor(
     readonly name: string,
     readonly actor: any,
-    public time: number
+    readonly timeRequired: number
   ) {}
 
   public get isFinished(): boolean {
-    return this.time <= 0
+    return this.timeElapsed >= this.timeRequired
   }
 
-  public abstract update(state: GameState, delta: number): void
+  public update(state: GameState, delta: number) {
+    this.timeElapsed += delta
+  }
 }
 
 export class ActivityPlant extends Activity {
@@ -29,15 +32,14 @@ export class ActivityPlant extends Activity {
   }
 
   public update(state: GameState, delta: number) {
-    console.log('Planting...', this.seed, this.time)
-    this.time -= delta
+    super.update(state, delta)
     if (this.isFinished) {
       state.farm.tiles[this.tile.x][this.tile.y].plant(
         this.seed.clone(this.tile)
       )
       this.amount--
       if (this.amount >= 0) {
-        this.time = this.seed.timeToPlant
+        this.timeElapsed = 0
       }
     }
   }
@@ -54,15 +56,12 @@ export class HarvestActivity extends Activity {
   }
 
   public update(state: GameState, delta: number): void {
-    console.log('Harvesting...')
-    this.time -= delta
+    super.update(state, delta)
     if (this.isFinished) {
       const tile = state.farm.tiles[this.y][this.x]
-      console.log('Tile', tile)
       const plants = tile.plots.filter(
         (p) => isPlant(p) && p.isGrown
       ) as Plant[]
-      console.log('harvest plants', plants)
       plants.forEach((p) => {
         p.activeHarvest(state)
       })

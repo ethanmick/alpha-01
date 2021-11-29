@@ -9,7 +9,7 @@ export class WheatBundleItem implements Item {
   icon = '🌾'
   weight = 0.5
   cost = 10
-  value = 10
+  value = 25
 
   constructor() {
     this.id = uuid()

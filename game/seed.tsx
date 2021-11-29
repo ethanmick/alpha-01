@@ -25,7 +25,7 @@ export abstract class Seed implements Item {
 
 export class WheatSeed extends Seed {
   constructor(readonly x: number, readonly y: number) {
-    super('seed.wheat', 'Wheat Seed', 10, 10, 2 * 1000, 10 * 1000)
+    super('seed.wheat', 'Wheat Seed', 10, 5, 2 * 1000, 10 * 1000)
   }
 
   public update(state: GameState, delta: number) {
