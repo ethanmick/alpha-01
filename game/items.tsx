@@ -12,3 +12,11 @@ export class WheatBundleItem extends BasicItem implements Item {
   cost = 10
   value = 25
 }
+
+export class TimberLogItem extends BasicItem implements Item {
+  name = 'Log'
+  key = 'wood.timber'
+  description = 'A log from a tree'
+  cost = 10
+  value = 20
+}

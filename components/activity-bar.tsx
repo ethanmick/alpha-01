@@ -1,4 +1,5 @@
 import { useGame } from 'game'
+import React from 'react'
 
 interface ProgressBarProps {
   progress: number
@@ -22,13 +23,13 @@ export const ActivityBar = () => {
 
   return (
     <div>
-      {state.activities.map((activity) => (
-        <>
+      {state.activities.map((activity, i) => (
+        <React.Fragment key={i}>
           <div key={activity.name}>{activity.name}</div>
           <ProgressBar
             progress={Math.min(activity.timeElapsed / activity.timeRequired, 1)}
           />
-        </>
+        </React.Fragment>
       ))}
     </div>
   )
