@@ -1,5 +1,6 @@
 export interface Item {
   id: string
+  key: string
   name: string
   cost?: number
   value?: number

@@ -8,6 +8,7 @@ export abstract class Plant implements Item {
   constructor(
     readonly id: string,
     readonly name: string,
+    readonly key: string,
     public timeToGrow: number,
     readonly cost: number,
     readonly value: number,
@@ -30,7 +31,7 @@ export abstract class Plant implements Item {
 
 export class WheatPlant extends Plant {
   constructor() {
-    super(uuid(), 'Wheat', 10 * 1000, 8, 4, 1, 2)
+    super(uuid(), 'Wheat', 'plant.wheat', 10 * 1000, 8, 4, 1, 2)
   }
 
   update(state: GameState, delta: number) {

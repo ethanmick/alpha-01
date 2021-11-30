@@ -2,12 +2,14 @@ import { Item } from './item'
 import { Plant, WheatPlant } from './plant'
 import { GameState } from './state'
 import { Tile } from './tile'
+import { uuid } from './uuid'
 
 export abstract class Seed implements Item {
+  readonly id: string = uuid()
   public time: number
   constructor(
-    readonly id: string,
     readonly name: string,
+    readonly key: string,
     readonly cost: number,
     readonly value: number,
     readonly timeToPlant: number,
@@ -25,7 +27,7 @@ export abstract class Seed implements Item {
 
 export class WheatSeed extends Seed {
   constructor(readonly x: number, readonly y: number) {
-    super('seed.wheat', 'Wheat Seed', 10, 5, 2 * 1000, 10 * 1000)
+    super('Wheat Seed', 'seed.wheat', 10, 5, 2 * 1000, 10 * 1000)
   }
 
   public update(state: GameState, delta: number) {
