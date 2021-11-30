@@ -77,7 +77,7 @@ export default function MarketPage() {
   return (
     <>
       <Header name="Store" back="/" />
-      <Stats money={state.money} />
+      <Stats />
       <div className="text-center font-bold py-2 border-b">Market</div>
       <Store update={update} />
       <div className="text-center font-bold py-2 border-b">Your Inventory</div>

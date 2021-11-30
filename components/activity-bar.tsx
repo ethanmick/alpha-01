@@ -16,7 +16,7 @@ const ProgressBar = ({ progress }: ProgressBarProps) => {
 
 export const ActivityBar = () => {
   const { state } = useGame()
-  if (state?.activities.length == 0) {
+  if (!state || state.activities.length == 0) {
     return null
   }
 

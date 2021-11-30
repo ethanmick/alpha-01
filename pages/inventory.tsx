@@ -1,8 +1,11 @@
-import { Header } from 'components'
+import { Header, Stats } from 'components'
 import { useGame } from 'game'
 
 const Inventory = () => {
   const { state } = useGame()
+  if (!state) {
+    return null
+  }
 
   return (
     <ul>
@@ -19,6 +22,7 @@ export default function InventoryPage() {
   return (
     <>
       <Header name="Inventory" back="/" />
+      <Stats />
       <Inventory />
     </>
   )

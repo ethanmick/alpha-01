@@ -28,18 +28,16 @@ export class ActivityPlant extends Activity {
     readonly seed: Seed,
     public amount: number
   ) {
-    super('Plant', actor, seed.timeToPlant)
+    super('Plant', actor, seed.timeToPlant * amount)
   }
 
   public update(state: GameState, delta: number) {
     super.update(state, delta)
     if (this.isFinished) {
-      state.farm.tiles[this.tile.x][this.tile.y].plant(
-        this.seed.clone(this.tile)
-      )
-      this.amount--
-      if (this.amount >= 0) {
-        this.timeElapsed = 0
+      for (let i = 0; i < this.amount; i++) {
+        state.farm.tiles[this.tile.x][this.tile.y].plant(
+          this.seed.clone(this.tile)
+        )
       }
     }
   }
