@@ -23,16 +23,20 @@ export class ItemStack {
 export class Inventory {
   constructor(public stacks: ItemStack[] = []) {}
 
-  add(item: Item) {
+  add(item: Item, amount = 1) {
     const stack = this.stacks.find((stack) => stack.item.name === item.name)
     if (stack) {
-      stack.count += 1
+      stack.count += amount
     } else {
-      this.stacks.push(new ItemStack(item, 1))
+      this.stacks.push(new ItemStack(item, amount))
     }
   }
 
   findById(id: string): ItemStack | undefined {
     return this.stacks.find((stack) => stack.item.id === id)
+  }
+
+  findByKey(key: string): ItemStack | undefined {
+    return this.stacks.find((stack) => stack.item.key === key)
   }
 }

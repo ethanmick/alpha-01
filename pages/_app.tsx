@@ -22,7 +22,7 @@ const state: GameState = {
 
 const initial: Game = {
   lastTick: new Date().getTime(),
-  tickLength: 1000,
+  tickLength: 50,
   state
 }
 

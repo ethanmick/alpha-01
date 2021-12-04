@@ -1,5 +1,6 @@
 import { isPlant } from 'game'
 import { Plant } from './plant'
+import { ResourceItem, ResourceType } from './resource'
 import { Seed } from './seed'
 import { GameState } from './state'
 import { Tile } from './tile'
@@ -17,11 +18,16 @@ export abstract class Activity {
   }
 
   public update(state: GameState, delta: number) {
+    if (this.timeElapsed === 0) {
+      this.onStart(state)
+    }
     this.timeElapsed += delta
     if (this.isFinished) {
       this.onFinish(state)
     }
   }
+
+  public onStart(state: GameState) {}
 
   public onFinish(state: GameState) {}
 }
@@ -40,20 +46,35 @@ export abstract class TileActivity extends Activity {
   }
 }
 
+interface ActivityPlantReq {
+  seed: Seed
+  amount: number
+}
+
 export class ActivityPlant extends TileActivity {
-  constructor(
-    actor: any,
-    tile: Tile,
-    readonly seed: Seed,
-    public amount: number
-  ) {
-    super(`Planting ${seed.name}`, actor, seed.timeToPlant * amount, tile)
+  public planting: number
+
+  constructor(actor: any, tile: Tile, private reqs: ActivityPlantReq) {
+    super(
+      `Planting ${reqs.seed.name}`,
+      actor,
+      reqs.seed.timeToPlant * reqs.amount,
+      tile
+    )
+  }
+
+  onStart(state: GameState) {
+    const stack = state.inventory.findByKey(this.reqs.seed.key)
+    if (!stack) {
+      throw new Error('No seed in inventory')
+    }
+    this.planting = stack.use(this.reqs.amount)
   }
 
   onFinish(state: GameState) {
-    for (let i = 0; i < this.amount; i++) {
+    for (let i = 0; i < this.planting; i++) {
       const tile = this.tile(state)
-      tile.plant(this.seed.clone(tile))
+      tile.plant(this.reqs.seed.clone(tile))
     }
   }
 }
@@ -70,5 +91,18 @@ export class HarvestActivity extends TileActivity {
       p.activeHarvest(state)
     })
     tile.plots = tile.plots.filter((p) => isPlant(p) && !p.isGrown)
+  }
+}
+
+export class ChopWoodActivity extends TileActivity {
+  constructor(actor: any, tile: Tile) {
+    super(`Chopping Wood`, actor, 10 * 1000, tile)
+  }
+
+  onFinish(state: GameState) {
+    const amount = 1
+    const tile = this.tile(state)
+    const mined = tile.mine(ResourceType.Wood, amount)
+    state.inventory.add(ResourceItem[ResourceType.Wood], mined)
   }
 }

@@ -1,11 +1,16 @@
-import { Item } from './item'
+import { Item, Plot } from 'game'
 import { Plant } from './plant'
+import { Resource } from './resource'
 import { Seed } from './seed'
 
-export const isSeed = (item: Item): item is Seed => {
-  return item instanceof Seed
+export const isSeed = (p: Plot | Item): p is Seed => {
+  return p instanceof Seed
 }
 
-export const isPlant = (item: Item): item is Plant => {
-  return item instanceof Plant
+export const isPlant = (p: Plot | Item): p is Plant => {
+  return p instanceof Plant
+}
+
+export const isResource = (plot: Plot): plot is Resource => {
+  return plot instanceof Resource
 }
