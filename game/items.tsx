@@ -20,3 +20,11 @@ export class TimberLogItem extends BasicItem implements Item {
   cost = 10
   value = 20
 }
+
+export class BasicRockItem extends BasicItem implements Item {
+  name = 'Rock'
+  key = 'stone.basic'
+  description = 'A basic rock'
+  cost = 4
+  value = 2
+}

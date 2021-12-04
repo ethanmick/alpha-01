@@ -20,9 +20,9 @@ export class Tile {
   constructor(public type: TileType, public x: number, public y: number) {}
 
   plant(seed: Seed) {
-    const open = this.plots.filter(isPlotOpen).length
-    if (open > OpenPlotsRequiredToPlant) {
-      this.plots.push(seed)
+    const i = this.plots.findIndex(isPlotOpen)
+    if (i > -1) {
+      this.plots[i] = seed
     }
   }
 

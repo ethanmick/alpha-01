@@ -86,11 +86,13 @@ export class HarvestActivity extends TileActivity {
 
   onFinish(state: GameState) {
     const tile = this.tile(state)
-    const plants = tile.plots.filter((p) => isPlant(p) && p.isGrown) as Plant[]
-    plants.forEach((p) => {
-      p.activeHarvest(state)
-    })
-    tile.plots = tile.plots.filter((p) => isPlant(p) && !p.isGrown)
+    for (let i = 0; i < tile.plots.length; i++) {
+      const p = isPlant(tile.plots[i]) && (tile.plots[i] as Plant)
+      if (p && p.isGrown) {
+        p.activeHarvest(state)
+      }
+      tile.plots[i] = null
+    }
   }
 }
 
@@ -104,5 +106,18 @@ export class ChopWoodActivity extends TileActivity {
     const tile = this.tile(state)
     const mined = tile.mine(ResourceType.Wood, amount)
     state.inventory.add(ResourceItem[ResourceType.Wood], mined)
+  }
+}
+
+export class MineStoneActivity extends TileActivity {
+  constructor(actor: any, tile: Tile) {
+    super(`Mine Stone`, actor, 10 * 1000, tile)
+  }
+
+  onFinish(state: GameState) {
+    const amount = 1
+    const tile = this.tile(state)
+    const mined = tile.mine(ResourceType.Stone, amount)
+    state.inventory.add(ResourceItem[ResourceType.Stone], mined)
   }
 }

@@ -9,7 +9,9 @@ import {
   isPlotUsed,
   isResource,
   isSeed,
+  MineStoneActivity,
   OpenPlotsRequiredToPlant,
+  Resource,
   Seed,
   Tile,
   TileType,
@@ -39,60 +41,41 @@ const PlotBadge = ({ used, total }: PlotBadgeProps) => (
   </div>
 )
 
-type SelectSeedProps = React.DetailedHTMLProps<
-  React.SelectHTMLAttributes<HTMLSelectElement>,
-  HTMLSelectElement
-> & {
-  inventory: GameState['inventory']
-}
-
-const SelectSeed = ({ inventory, value, onChange }: SelectSeedProps) => {
-  return (
-    <select
-      className="p-1 border rounded m-2"
-      value={value}
-      onChange={onChange}
-    >
-      <option disabled hidden value="">
-        Select seed to plant
-      </option>
-      {inventory.stacks
-        .filter(({ item, count }) => isSeed(item) && count > 0)
-        .map(({ item, count }, i) => (
-          <option value={item.id} key={i}>
-            {item.name} ({count})
-          </option>
-        ))}
-    </select>
-  )
-}
-
-const Mine = ({ resource, tile }) => {
+const Mine = ({ tile }) => {
   const { update } = useGame()
+  const resources = tile.plots.filter((p) => isResource(p)) as Resource[]
+  const resource = resources[0]
 
   const names = {
-    [ResourceType.Wood]: 'Gather Wood'
+    [ResourceType.Wood]: 'Gather Wood',
+    [ResourceType.Stone]: 'Gather Stone'
+  }
+
+  const action = {
+    [ResourceType.Wood]: new ChopWoodActivity(null, tile),
+    [ResourceType.Stone]: new MineStoneActivity(null, tile)
   }
 
   const onClick = () => {
     update((state) => {
-      state.activities.push(new ChopWoodActivity(null, tile))
+      state.activities.push(action[resource.key])
     })
   }
 
   return (
     <div>
       <button className="bg-green-500" onClick={onClick}>
-        Mine {names[resource]}
+        Mine {names[resource.key]}
       </button>
     </div>
   )
 }
 
-const Harvest = ({ tile }) => {
+const Harvest = ({ tile, clear }) => {
   const { update } = useGame()
 
   const onClick = () => {
+    clear()
     update((state: GameState) => {
       state.activities.push(new HarvestActivity(null, tile))
     })
@@ -107,11 +90,12 @@ const Harvest = ({ tile }) => {
   )
 }
 
-const Plant = ({ tile }) => {
+const Plant = ({ tile, clear }) => {
   const { state, update } = useGame()
   const [itemID, setItemID] = useState('')
 
   const onClick = () => {
+    clear()
     update((state: GameState) => {
       const stack = state.inventory.findById(itemID)
       state.activities.push(
@@ -196,6 +180,10 @@ const BasicDirt = ({ tile }: BasicDirtProps) => {
   const { state, update } = useGame()
   const [seed, setSeed] = useState('')
 
+  const clear = () => {
+    setAction({ label: '', node: null })
+  }
+
   const Action = action.node || null
 
   return (
@@ -236,7 +224,7 @@ const BasicDirt = ({ tile }: BasicDirtProps) => {
           </option>
         ))}
       </select>
-      {Action && <Action tile={tile} />}
+      {Action && <Action tile={tile} clear={clear} />}
     </>
   )
 }
