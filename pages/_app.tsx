@@ -1,29 +1,48 @@
-import { GameContext, GameState, ItemType, Seeds, useEngine } from 'game'
-import 'tailwindcss/tailwind.css'
+import {
+  Game,
+  GameContext,
+  GameState,
+  Inventory,
+  ItemStack,
+  tiles,
+  useEngine,
+  WheatSeed
+} from 'game'
+import { useEffect } from 'react'
+import '../styles/index.css'
 
-const initial: GameState = {
-  lastUpdate: new Date().getTime(),
-  tick: 1000,
+const state: GameState = {
   money: 100,
   farm: {
-    tiles: Array(8)
-      .fill(null)
-      .map(() => ({}))
+    tiles
   },
-  inventory: [
-    {
-      item: {
-        name: Seeds[0].name,
-        type: ItemType.Seed,
-        value: Seeds[0].value
-      },
-      count: 8
+  inventory: new Inventory([new ItemStack(new WheatSeed(-1, -1), 8)]),
+  activities: []
+}
+
+const initial: Game = {
+  lastTick: new Date().getTime(),
+  tickLength: 50,
+  state
+}
+
+const start = (): Game => {
+  try {
+    const s = null // JSON.parse(localStorage.getItem('game'))
+    if (!s) {
+      return initial
     }
-  ]
+    return s
+  } catch {
+    return initial
+  }
 }
 
 function MyApp({ Component, pageProps }) {
-  const { state, update } = useEngine(initial)
+  const { state, update, load } = useEngine()
+  useEffect(() => {
+    load(start())
+  }, [])
   return (
     <GameContext.Provider value={{ state, update }}>
       <Component {...pageProps} />
