@@ -15,6 +15,9 @@ export default function HomePage() {
       <Link href="/market">
         <a className="block">Market</a>
       </Link>
+      <Link href="/crafting">
+        <a className="block">Crafting</a>
+      </Link>
     </div>
   )
 }
